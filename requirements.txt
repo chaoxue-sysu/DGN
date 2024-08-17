@@ -1,0 +1,10 @@
+CSCORE==git+https://github.com/ChangSuBiostats/CS-CORE_python.git
+filetype==1.2.0
+gprofiler_official==1.0.0
+matplotlib==3.7.0
+numpy==1.23.5
+pandas==1.5.3
+pyecharts==2.0.4
+scikit_learn==1.2.1
+scipy
+seaborn==0.13.2
