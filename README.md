@@ -99,7 +99,7 @@ The output of DGN consists of three main components: disease-associated genes, c
 | `--function_enrich_p_cutoff`              | P-value threshold for functional enrichment analysis by g:Profiler.                                                               | `3`     |
 | `--function_enrich_top_n`        | Maximum number of functional enrichment terms displayed.                                        | `3`     |
 
-### Extra analysis: DESE, inferring disease-associated genes and cell types using gene expression.                                                                                                   | `20`    |
+### Extra analysis: DESE, inferring disease-associated genes and cell types using gene expression.  
 | Flag                                | Description                                                                                                                                | Default |
 |:------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:--------|
 | `--run_expr_dese`                   | Calculate the mean expression profile of genes and run DESE.                                                                               | `0.05`  |
