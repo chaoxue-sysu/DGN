@@ -7,6 +7,7 @@ import argparse
 import os
 import pickle
 import re
+import sys
 
 import numpy as np
 import pandas as pd
@@ -25,13 +26,15 @@ from util import index_in_gene_symbol_of_gene_list, log, cpm, make_dir, cal_hist
     run_command, KGGSEE, pvalue_adjust, need_trans_gene_name, kggsee_rez, cell_corr_heatmap, \
     cluster_df, heatmap_color_rstyle, heatmap_color_rstyle_single, jaccard, go_enrich_plot, GeneNetwork
 
+import warnings
+warnings.filterwarnings("ignore")
 font_files = font_manager.findSystemFonts(fontpaths=FONTS_DIR)
 for file in font_files:
     font_manager.fontManager.addfont(file)
 plt.rcParams["font.sans-serif"] = "Arial"
 
-import warnings
-warnings.filterwarnings("ignore")
+PKG_NAME='DGN'
+VERSION='1.0.0'
 
 class DGN:
     '''
@@ -1078,5 +1081,8 @@ def main():
     dgn.main()
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv)==2 and sys.argv[1]=='--version':
+        print(f'Congratulations! {PKG_NAME} {VERSION} is installed successfully. \nRun `python dgn.py -h` to view usage instructions.')
+    else:
+        main()
 
