@@ -29,6 +29,7 @@ import matplotlib.colors as mcolors
 LOCAL_DIR = os.path.dirname(os.path.abspath(__file__))
 RESOURCE_DIR = f'{LOCAL_DIR}/resources'
 FONTS_DIR = f'{RESOURCE_DIR}/fonts'
+KGGSEE_DIR = f'{LOCAL_DIR}/lib/kggsee'
 
 def log(content):
     """

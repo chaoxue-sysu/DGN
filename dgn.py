@@ -24,7 +24,7 @@ from scipy.stats import zscore
 
 from util import index_in_gene_symbol_of_gene_list, log, cpm, make_dir, cal_hist_density, FONTS_DIR, kggsee_dese, \
     run_command, KGGSEE, pvalue_adjust, need_trans_gene_name, kggsee_rez, cell_corr_heatmap, \
-    cluster_df, heatmap_color_rstyle, heatmap_color_rstyle_single, jaccard, go_enrich_plot, GeneNetwork
+    cluster_df, heatmap_color_rstyle, heatmap_color_rstyle_single, jaccard, go_enrich_plot, GeneNetwork, KGGSEE_DIR
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -42,6 +42,7 @@ class DGN:
     '''
     def __init__(self,input_dict:{}):
         self.para=input_dict
+        self.para['kggsee_dir']=KGGSEE_DIR
         out_dir=self.para['output_dir']
         self.node_score_dir = f'{out_dir}/node_score'# save: degree, mean expression.
         self.intermediate_dir = f'{out_dir}/intermediate'# save: k factor, resample corr coef.
@@ -1007,9 +1008,9 @@ def main():
 
     gwas=parser.add_argument_group('Input 2: GWAS summary statistics','')
     gwas.add_argument('--gwas_path',type=str,help='GWAS summary table with header.',required=True)
-    gwas.add_argument('--chrom_col', type=str, help='Chromosome column in GWAS summary table.', required=True)
-    gwas.add_argument('--pos_col', type=str, help='Base position column in GWAS summary table.', required=True)
-    gwas.add_argument('--p_col', type=str, help='P-value column in GWAS summary table.', required=True)
+    gwas.add_argument('--chrom_col', type=str, help='Chromosome column in GWAS summary table.', default='CHR')
+    gwas.add_argument('--pos_col', type=str, help='Base position column in GWAS summary table.', default='BP')
+    gwas.add_argument('--p_col', type=str, help='P-value column in GWAS summary table.', default='P')
     gwas.add_argument('--buildver', type=str,default='hg19',choices=['hg19','hg38'],
                       help='Specifies the reference genome version of the coordinates.')
     gwas.add_argument('--phenotype_abbr', type=str, help='Phenotype abbreviation, used as the file identifier for this phenotype in the output results', required=True)
@@ -1034,7 +1035,7 @@ def main():
                            help='No need to recalculate the gene centrality in the gene co-expression network for the next analysis.')
 
     step_2=parser.add_argument_group('Step 2: Disease-associated genes and cell types', '')
-    step_2.add_argument('--kggsee_dir',type=str,help='Directory of downloaded and extracted KGGSEE.',required=True)
+    # step_2.add_argument('--kggsee_dir',type=str,help='Directory of downloaded and extracted KGGSEE.',required=True)
     step_2.add_argument('--vcf_ref', type=str,required=True, help='Specifies a VCF file of genotypes sampled from a reference population.')
     step_2.add_argument('--multiple_testing', type=str,default='benfdr',choices=['benfdr','bonf','fixed'],
                         help='Specifies the method for multiple testing correction.')
