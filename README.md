@@ -102,7 +102,7 @@ The output of DGN consists of three main components: disease-associated genes, c
 ### Extra analysis: DESE, inferring disease-associated genes and cell types using gene expression.  
 | Flag                                | Description                                                                                                                                | Default |
 |:------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:--------|
-| `--run_expr_dese`                   | Calculate the mean expression profile of genes and run DESE.                                                                               | `0.05`  |
+| `--run_expr_dese`                   | Calculate the mean expression profile of genes and run DESE.                                                                               |  |
 | `--normalize_expr`                  | The normalization method for the expression profiles. `no` denote skip normalization, `cpm` denotes count per million (CPM) normalization. | `cpm`   |
 | `--log_trans_expr`          | Transform the expression value into log2(x+1).                                                                                         |         |
 
