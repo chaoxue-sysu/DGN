@@ -52,8 +52,7 @@ class DGN:
         make_dir(self.node_score_dir,self.intermediate_dir)
         self.cell_k = {}
         self.module_p_cutoff = 0.1
-        # self.node_score_file_name='degree.k_adjusted.txt.gz'
-        self.node_score_file_name = 'degree.raw.txt.gz'
+        self.node_score_file_name='degree.k_adjusted.txt.gz'
 
     def __print_effect_para(self):
         msg='Effective options:'
@@ -533,18 +532,6 @@ class DGN:
             self.__plot_sc_depth(cdg[:,0],cdg[:,1],f'{self.intermediate_dir}/sc_depth.png')
             log(f'saved and plot degree')
 
-    def cal_z_adjusted_degree(self):
-        raw_degree_path=f'{self.node_score_dir}/degree.raw.txt.gz'
-        if not os.path.isfile(raw_degree_path):
-            log('warning: no raw degree, cannot calculate z adjusted degree.')
-            return
-        df=pd.read_table(raw_degree_path,header=0,index_col=0)
-        zscore_df = df.apply(lambda x: zscore(x), axis=0, result_type='broadcast')
-        min_zscore = zscore_df.min(skipna=True).min()
-        if min_zscore < 0:
-            zscore_df += abs(min_zscore)
-        zscore_df.to_csv(f'{self.node_score_dir}/degree.z_adjusted.txt.gz',sep='\t',float_format='%.4f',na_rep='nan')
-
     def __read_df_sort_col(self,path, **argv):
         df = pd.read_table(path, **argv)
         cols = df.columns
@@ -620,11 +607,7 @@ class DGN:
         run DESE framework using gene degree by KGGSEE toolkit.
         :return:
         '''
-        # score_files=sorted([f for f in os.listdir(self.node_score_dir) if not (f.startswith('degree.raw') or f.startswith('degree.z_adjusted'))])
-        # score_files=sorted([f for f in os.listdir(self.node_score_dir) if not (f.startswith('degree.k_adjusted'))])
-        score_files = sorted([f for f in os.listdir(self.node_score_dir)])
-        # score_files = sorted([f for f in os.listdir(self.node_score_dir) if f.startswith('expr')])
-        # score_files = sorted([f for f in os.listdir(self.node_score_dir)])
+        score_files = sorted([f for f in os.listdir(self.node_score_dir) if not f.startswith('degree.raw')])
         gene_score_files=' '.join([f'"{self.node_score_dir}/{sf}"' for sf in score_files])
         common_parars=[
             self.para['gwas_path'],
