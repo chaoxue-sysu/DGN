@@ -577,7 +577,7 @@ class DGN:
             expr_keys.append('expr.mean')
         expr_dfs={}
         for ek in expr_keys:
-            cmd=kggsee_rez(f'{self.node_score_dir}/{ek}.txt.gz',f'{self.intermediate_dir}/{ek}',5,kggsee_jar,kggsee_resources)
+            cmd=kggsee_rez(f'{self.node_score_dir}/{ek}.txt.gz',f'{self.intermediate_dir}/{ek}',3,kggsee_jar,kggsee_resources)
             run_command(cmd,'\t')
             df=self.__read_df_sort_col(f'{self.intermediate_dir}/{ek}.REZ.webapp.genes.txt.gz',header=0,index_col=0)
             df=df.loc[~df.index.duplicated(),:]
