@@ -1059,7 +1059,7 @@ def main():
     step_3.add_argument('--module_plot_cut_edge_weight', type=float, default=0.6,
                            help='Minimum edge weight for pruning nodes in plotting modules.')
     step_3.add_argument('--show_node_label_top_n', type=int, default=5,
-                           help='Percentile threshold of degree for displaying the node labels.')
+                           help='Display the labels of the top n genes by connectivity.')
     step_3.add_argument('--function_enrich_p_cutoff', type=float, default=0.05,
                            help='P-value threshold for functional enrichment analysis by g:Profiler')
     step_3.add_argument('--function_enrich_top_n', type=int, default=3,
