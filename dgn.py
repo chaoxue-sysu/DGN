@@ -94,7 +94,7 @@ class DGN:
         return sub
 
     def __read_expr_file(self,include_cells=None):
-        exclude_cells=self.para['exclude_cells']
+        exclude_cells=None
         na_fill_val = 0
         expr_file=self.para["expression_path"]
         cell_annot_file=self.para["cell_annot_path"]
@@ -144,7 +144,7 @@ class DGN:
             yield expr, re.sub('\s+','',cell_name), gene_id
 
     def __read_expr_dir(self,include_cells=None):
-        exclude_cells=self.para['exclude_cells']
+        exclude_cells=None
         expr_dir=self.para["expression_dir"]
         min_cell=self.para["min_cell"]
         max_cell = self.para["max_cell"]
