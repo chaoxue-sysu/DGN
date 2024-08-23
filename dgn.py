@@ -692,6 +692,7 @@ class DGN:
             seq_depth=np.nansum(expr,axis=0)
             ## select only top expressed genes
             include_genes = None
+            print(expr,gene_id,n_top_genes,expr_norm_method,include_genes)
             expr, gene_id = self.extract_expr_top(expr,gene_id,n_top_genes,expr_norm_method,include_genes)
             log(f'{cell_name}: load data and cal adj matrix')
             genes=gene_id['gene_symbol']
@@ -951,7 +952,7 @@ class DGN:
         self.cal_degree_adjusted()
         if self.para['run_expr_dese']:
             self.cal_expr_mean()
-        self.expr_analysis()
+        # self.expr_analysis()
         self.gene_based_analysis()
         self.detect_gene_module()
         self.annotate_module()
@@ -987,7 +988,6 @@ class DGN:
 
 def trans_options(args):
     para=vars(args)
-    print(para)
     return para
 
 def main():
@@ -1064,12 +1064,19 @@ def main():
     step_extra.add_argument('--log_trans_expr', action='store_true',
                            help='Transform the expression value into log2(x+1).')
 
+    func=parser.add_argument_group('Separated functions', '')
+    func.add_argument('--detect_module', action='store_true',
+                           help='Detect module function.')
+
     parser.parse_args()
     args = parser.parse_args()
     para=trans_options(args)
 
     dgn=DGN(para)
-    dgn.main()
+    if para['detect_module']:
+        dgn.main_module()
+    else:
+        dgn.main()
 
 if __name__ == '__main__':
     if len(sys.argv)==2 and sys.argv[1]=='--version':
