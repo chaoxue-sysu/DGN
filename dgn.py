@@ -61,7 +61,7 @@ class DGN:
                 msg+=f'\n --{k} {v}'
         print(msg)
 
-    def extract_expr_top(expr: np.ndarray, gene_id: dict, n_top_genes: int, expr_norm_method: str, include_genes=None):
+    def extract_expr_top(self,expr: np.ndarray, gene_id: dict, n_top_genes: int, expr_norm_method: str, include_genes=None):
         all_genes = expr.shape[0]
         if all_genes < n_top_genes:
             n_top_genes = all_genes
@@ -692,7 +692,6 @@ class DGN:
             seq_depth=np.nansum(expr,axis=0)
             ## select only top expressed genes
             include_genes = None
-            print(expr,gene_id,n_top_genes,expr_norm_method,include_genes)
             expr, gene_id = self.extract_expr_top(expr,gene_id,n_top_genes,expr_norm_method,include_genes)
             log(f'{cell_name}: load data and cal adj matrix')
             genes=gene_id['gene_symbol']
