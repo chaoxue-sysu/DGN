@@ -607,7 +607,14 @@ class DGN:
         run DESE framework using gene degree by KGGSEE toolkit.
         :return:
         '''
-        score_files = sorted([f for f in os.listdir(self.node_score_dir) if not f.startswith('degree.raw')])
+        score_files = []
+        for f in os.listdir(self.node_score_dir):
+            if f.startswith('degree.raw'):
+                continue
+            if not self.para['run_expr_dese'] and f.startswith('expr.mean'):
+                continue
+            score_files.append(f)
+        score_files = sorted(score_files)
         gene_score_files=' '.join([f'"{self.node_score_dir}/{sf}"' for sf in score_files])
         common_parars=[
             self.para['gwas_path'],
