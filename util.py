@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 import seaborn
-import sklearn
+from sklearn.cluster import SpectralClustering
 from gprofiler import GProfiler
 from matplotlib.colors import LinearSegmentedColormap
 from scipy.cluster import hierarchy
@@ -1000,7 +1000,7 @@ class GeneNetwork:
                 corr_sub_mat=corr_matrix[:,clusterIdx][clusterIdx,:]
                 sim_sub_mat=self.calculate_similar_mat(corr_sub_mat)
                 nClusters = 2
-                clusters = sklearn.cluster.spectral_clustering(sim_sub_mat, n_clusters=nClusters,
+                clusters = SpectralClustering(sim_sub_mat, n_clusters=nClusters,
                                                                random_state=1)  # ,eigen_solver='arpack'
                 clusterSize = []
                 for i in range(nClusters):
