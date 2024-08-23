@@ -968,7 +968,7 @@ class GeneNetwork:
     def __init__(self):
         pass
 
-    def TOM(A: np.ndarray):
+    def TOM(self,A: np.ndarray):
         '''
         WGCNA TOM
         '''
