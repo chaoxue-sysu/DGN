@@ -1000,8 +1000,8 @@ class GeneNetwork:
                 corr_sub_mat=corr_matrix[:,clusterIdx][clusterIdx,:]
                 sim_sub_mat=self.calculate_similar_mat(corr_sub_mat)
                 nClusters = 2
-                clusters = SpectralClustering(sim_sub_mat, n_clusters=nClusters,
-                                                               random_state=1)  # ,eigen_solver='arpack'
+                sc_model = SpectralClustering(n_clusters=nClusters,random_state=1)  # ,eigen_solver='arpack'
+                clusters = sc_model.fit_predict(sim_sub_mat)
                 clusterSize = []
                 for i in range(nClusters):
                     cluIdx = []
