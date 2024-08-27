@@ -127,6 +127,7 @@ class DGN:
         gene_raw_id=gene_id['gene_id']
         log(f'loaded {len(gene_id["gene_symbol"])} unified genes.')
         for cell_name in cell_types:
+            cell_name_abbr=re.sub('\s+','',cell_name)
             if include_cells is not None and cell_name not in include_cells:
                 continue
             if exclude_cells is not None and cell_name in exclude_cells:
@@ -134,13 +135,14 @@ class DGN:
             cell_ids=anno_df.loc[anno_df[1]==cell_name,0]
             cell_ids=sorted(unique_cells.intersection(cell_ids))
             if len(cell_ids)<min_cell:
+                log(f'WARNING: cell count of {cell_name} < {min_cell}, skip. Please set the minimum number of cells allowed to build the network by setting --min_cell. ')
                 continue
             if len(cell_ids)>max_cell:
                 cell_ids=self.__select_sub_cell(cell_ids,max_cell)
             df=expr_df.loc[:,cell_ids]
             df = df.loc[gene_raw_id, :].fillna(na_fill_val)
             expr=df.values
-            yield expr, re.sub('\s+','',cell_name), gene_id
+            yield expr, cell_name_abbr, gene_id
 
     def __read_expr_dir(self,include_cells=None):
         exclude_cells=None
@@ -388,39 +390,23 @@ class DGN:
         self.plot_expr_dist()
         log('Completed mean expression profile of genes.')
 
-    def cell_type_qc(self,sum_degree:np.ndarray):
+    def cell_type_qc(self,sum_degree:np.ndarray,fold_IQR=1.5):
         data=sum_degree
         Q1 = np.percentile(data, 25)
         Q3 = np.percentile(data, 75)
         IQR = Q3 - Q1
-        threshold = 1.5 #1.5
+        threshold = fold_IQR #1.5
         remain_index = np.where((data >= Q1 - threshold * IQR) & (data <= Q3 + threshold * IQR))[0]
         rmidx=[int(i) for i in remain_index]
         return rmidx
 
-    def test_qc_cells(self):
-        resample_path=f'{self.intermediate_dir}/resample_corr.txt.gz'
-        df=pd.read_table(resample_path)
-        cells=df.columns.values
-        resample_corr=df.values
-        ## filter cell types by global degree.
-        mean_degree = np.nanmean(resample_corr, axis=0)
-        print({cells[i]: mean_degree[i] for i in range(len(mean_degree))})
-        remain_idx = self.cell_type_qc(mean_degree)
-        remove_idx = np.array([i for i in range(len(cells)) if i not in remain_idx])
-        log(f'filter out {len(remove_idx)} cell types: {cells[remove_idx]}, remain {len(remain_idx)}.')
-        resample_corr = resample_corr[:, remain_idx]
-        cells = cells[remain_idx]
-        k_factors = self.__cal_k_factor(resample_corr)
-        cell_k = {cells[i]: k_factors[i] for i in range(len(k_factors))}
-        print(cell_k)
-        log(f'calculated k factors')
-
     def cal_degree_adjusted(self):
         min_k=self.para['min_k']
         max_k=self.para['max_k']
+        fold_IQR=self.para['fold_IQR']
         net_cate=['raw','k_adjusted'] # Notice: the order can not be changed.
         # net_cate=['k_adjusted']
+        cell_info = f'{self.intermediate_dir}/cell_meta.txt'
         k_factor_path = f'{self.intermediate_dir}/k_factor.txt'
         degree_path = f'{self.node_score_dir}/degree.k_adjusted.txt.gz'
         resample_path=f'{self.intermediate_dir}/resample_corr.txt.gz'
@@ -454,7 +440,12 @@ class DGN:
             rc_df.to_csv(resample_path,sep='\t',float_format='%.4f',index=None)
             ## filter cell types by global degree.
             mean_abs_r=np.nanmean(resample_corr,axis=0)
-            remain_idx=self.cell_type_qc(mean_abs_r)
+            ## save raw cell types info
+            ck_df=pd.DataFrame({'sample_size':sample_size,'mean_abs_r':mean_abs_r},index=cells)
+            ck_df.index.name='cell_types'
+            ck_df.to_csv(cell_info,sep='\t')
+
+            remain_idx=self.cell_type_qc(mean_abs_r,fold_IQR)
             mean_abs_r=mean_abs_r[remain_idx]
             resample_corr=resample_corr[:, remain_idx]
             sample_size=sample_size[remain_idx]
@@ -1016,6 +1007,8 @@ def main():
                            help='The max number of cells or samples required in the analysis.')
     step_1.add_argument('--min_k', type=float, default=0.5,help='The minimum value of k in normalization for co-expression network.')
     step_1.add_argument('--max_k', type=float, default=1.5,help='The max value of k in normalization for co-expression network.')
+    step_1.add_argument('--fold_IQR', type=float, default=1.5,
+                        help='How many times the IQR is the normal range of the average |r|.')
     step_1.add_argument('--edge_method', type=str, default='cs-core',choices=['pearson','cs-core'],
                            help='The method for calculating edge weights (i.e., gene correlations)')
     step_1.add_argument('--resample_size', type=int, default=100000,

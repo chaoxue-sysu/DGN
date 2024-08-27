@@ -64,17 +64,18 @@ The output of DGN consists of three main components: disease-associated genes, c
 | `--output_dir`       | Output directory. |     |
 | `--phenotype_abbr`       | Phenotype abbreviation, used as the file identifier for this phenotype in the output results. |      |
 ### Step 1: Construction of gene co-expression network
-| Flag                   | Description                                                                                          | Default   |
-|:-----------------------|:-----------------------------------------------------------------------------------------------------|:----------|
-| `--trans_gene_symbol`  | Convert the gene ID in the expression profiles to gene symbol of HGNC.                               |       |
-| `--min_expr_value`     | The minimum average gene expression level used for constructing co-expression networks.              | `0`       |
-| `--min_cell`           | The minimum number of cells or samples required in the analysis.                                     | `100`     |
-| `--max_cell`           | The max number of cells or samples required in the analysis.                                         | `1000`    |
-| `--min_k`              | The minimum value of k in normalization for co-expression network.                                   | `0.5`     |
-| `--max_k`              | The max value of k in normalization for co-expression network.                                       | `1.5`     |
-| `--edge_method`        | The method for calculating edge weights (i.e., gene correlations),`pearson` or `cs-core`.            | `cs-core` |
-| `--resample_size`              | Sample size for resampling edge weights when correcting the co-expression network.                   | `100000`  |
-| `--keep_expr`              | No need to recalculate the gene centrality in the gene co-expression network for the next analysis.  |       |
+| Flag                          | Description                                                                                          | Default   |
+|:------------------------------|:-----------------------------------------------------------------------------------------------------|:----------|
+| `--trans_gene_symbol`         | Convert the gene ID in the expression profiles to gene symbol of HGNC.                               |       |
+| `--min_expr_value`            | The minimum average gene expression level used for constructing co-expression networks.              | `0`       |
+| `--min_cell`                  | The minimum number of cells or samples required in the analysis.                                     | `100`     |
+| `--max_cell`                  | The max number of cells or samples required in the analysis.                                         | `1000`    |
+| `--min_k`                     | The minimum value of k in normalization for co-expression network.                                   | `0.5`     |
+| `--max_k`                     | The max value of k in normalization for co-expression network.                                       | `1.5`     |
+| `--fold_IQR`                  | How many times the IQR is the normal range of the average |r|.                                       | `1.5`     |
+| `--edge_method`               | The method for calculating edge weights (i.e., gene correlations),`pearson` or `cs-core`.            | `cs-core` |
+| `--resample_size`             | Sample size for resampling edge weights when correcting the co-expression network.                   | `100000`  |
+| `--keep_expr`                 | No need to recalculate the gene centrality in the gene co-expression network for the next analysis.  |       |
 ### Step 2: Disease-associated genes and cell types
 | Flag                   | Description                                                                                         | Default   |
 |:-----------------------|:----------------------------------------------------------------------------------------------------|:----------|
