@@ -250,7 +250,7 @@ class DGN:
         v = np.nanmean(np.nanmean(norm_datas, axis=1))
         ks = []
         for i in range(norm_datas.shape[1]):
-            k = fsolve(k_equation, 0.1, (norm_datas[:, i], v))
+            k = fsolve(k_equation, 0.001, (norm_datas[:, i], v))
             ks.append(k[0])
         ks=np.array(ks)
         return ks
