@@ -85,7 +85,6 @@ The output of DGN consists of three main components: disease-associated genes, c
 | `--top_n_gene`           | Maximum number of genes entering conditional association analysis.                                        | `1000`    |
 | `--nt`              | Specifies the number of threads.                                  | `1`       |
 | `--rm_hla`              | Remove HLA region.                                      |       |
-| `--edge_method`        | The method for calculating edge weights (i.e., gene correlations),`pearson` or `cs-core`.           | `cs-core` |
 | `--java_path`              | Java path.                  | `java`    |
 | `--jvm_gb`              | JVM value (GB). | `20`      |
 
