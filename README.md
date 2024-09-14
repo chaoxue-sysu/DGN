@@ -96,7 +96,7 @@ The output of DGN consists of three main components: disease-associated genes, c
 | `--module_cut_edge_weight`           | Minimum edge weight for pruning nodes in modules.                                                                                 | `0.5`   |
 | `--module_plot_cut_edge_weight`           | Minimum edge weight for pruning nodes in plotting modules.                                                                        | `0.6`   |
 | `--show_node_label_top_n`              | Display the labels of the top n genes by connectivity.                                                                    | `5`     |
-| `--function_enrich_p_cutoff`              | P-value threshold for functional enrichment analysis by g:Profiler.                                                               | `3`     |
+| `--function_enrich_p_cutoff`              | P-value threshold for functional enrichment analysis by g:Profiler.                                                               | `0.05`  |
 | `--function_enrich_top_n`        | Maximum number of functional enrichment terms displayed.                                        | `3`     |
 
 ### Extra analysis: DESE, inferring disease-associated genes and cell types using gene expression.  
