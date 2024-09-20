@@ -39,11 +39,66 @@ python dgn.py \
 --phenotype_abbr PHENO_ABBR
 ```
 Make sure to replace these placeholder variables with the actual values relevant to your specific situation.
+
 ### DGN Output
-The output of DGN consists of three main components: disease-associated genes, cell types, and gene network modules.
+Output Directory Structure:
+
++ The `intermediate` folder stores temporary result files generated during the network construction process.
++ The `node_score` folder stores gene connectivity profile files (and, if `--run_expr_dese` is set, gene expression profile files as well).
++ The `result` folder stores the formal DGN results, which include three aspects: disease-associated genes, cell types, and gene network modules. Detailed descriptions are provided below.
+
 #### 1. Disease-Associated Genes
+The disease-associated gene results are stored in `{PHENO_ABBR}.gene.assoc.condi.txt`. The meanings of the column names in the table are as follows:
+
+| Header   | Description                                                                                               |
+|:----------|:-----------------------------------------------------------------------------------------------------------|
+| Gene     | Gene symbol                                                                                               |
+| Chrom    | Chromosome of the gene                                                                                    |
+| StartPos | Start coordinate of the gene                                                                              |
+| EndPos   | End coordinate of the gene                                                                                |
+| #Var     | Number of variants within the gene                                                                        |
+| Group    | LD group number. Conditional ECS tests were performed for genes within the same LD group.                 |
+| ECSP     | p-value of ECS                                                                                            |
+| CondiECSP| p-value of the conditional gene-based association tests by conditional ECS                                 |
+| GeneScore| Gene’s selective-expression score. A gene with a high score will be given higher priority to enter the conditioning procedure. |
+
+
 #### 2. Disease-Associated Cell Types
+The disease-associated cell types results are stored in `{PHENO_ABBR}.celltype.txt`. The meanings of the column names in the table are as follows:
+
+| Header             | Description                                                                                                               |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------|
+| TissueName         | Name of the tissue being tested                                                                                           |
+| Unadjusted(p)      | Unadjusted p-values for the tissue-phenotype associations                                                                 |
+| Adjusted(p)        | Adjusted p-values calculated by adjusting both selection bias and multiple testing                                        |
+| Median(IQR)SigVsAll | Median (interquartile range) expression of the conditionally significant genes and all the background genes               |
+
+
 #### 3. Disease-Associated Gene Network Modules
+(1) The complete results of disease-associated gene modules are stored in `{PHENO_ABBR}.assoc_gene_module.txt`. 
+The functional enrichment annotation results for significantly associated modules (FDR < 0.1) are stored in
+`{PHENO_ABBR}.assoc_gene_module_anno.xlsx`. The meanings of the column names in the table are as follows:
+
+| Header             | Description                                                                                                 |
+|--------------------|-------------------------------------------------------------------------------------------------------------|
+| module_id         | The module ID                                                                                               |
+| cell_type      | The cell type in which the module is located                                                                |
+| p        | The module association p-value                                                                              |
+| p.adj_fdr | The p-value adjusted using the Benjamini-Hochberg FDR method                                                |
+| assoc_gene_number | The number of disease-associated genes within the module                                                    |
+| module_gene_number | The total number of genes within the module                                                                 |
+| assoc_gene | The disease-associated genes in the module                                                                  |
+| module_gene | All the genes in the module                                                                                 |
+| "GO:BP," "GO:CC," and "GO:MF" | The GO enrichment results for Biological Process, Cellular Component, and Molecular Function, respectively. |
+| KEGG | The KEGG pathway enrichment results.                                                                        |
+
+(2) The visualization results of disease-significantly associated modules are stored in the `{PHENO_ABBR}.plot` folder. 
+The file `{module_id}.module_network.html`contains the network diagram of the module, while`{module_id}.module_heatmap.png`shows the heatmap of the network edge weights.
+For example:
+
+|  ![img.png](img.png) | ![img_1.png](img_1.png) |
+|:--------------------:|:----------------------:|
+|   `{module_id}.module_network.html`    | `{module_id}.module_heatmap.png`        |
 
 ## Complete List of DGN Parameters
 ### Input 1: Gene expression profile
@@ -64,18 +119,18 @@ The output of DGN consists of three main components: disease-associated genes, c
 | `--output_dir`       | Output directory. |     |
 | `--phenotype_abbr`       | Phenotype abbreviation, used as the file identifier for this phenotype in the output results. |      |
 ### Step 1: Construction of gene co-expression network
-| Flag                          | Description                                                                                          | Default   |
-|:------------------------------|:-----------------------------------------------------------------------------------------------------|:----------|
-| `--trans_gene_symbol`         | Convert the gene ID in the expression profiles to gene symbol of HGNC.                               |       |
-| `--min_expr_value`            | The minimum average gene expression level used for constructing co-expression networks.              | `0`       |
-| `--min_cell`                  | The minimum number of cells or samples required in the analysis.                                     | `100`     |
-| `--max_cell`                  | The max number of cells or samples required in the analysis.                                         | `1000`    |
-| `--min_k`                     | The minimum value of k in normalization for co-expression network.                                   | `0.5`     |
-| `--max_k`                     | The max value of k in normalization for co-expression network.                                       | `1.5`     |
-| `--fold_IQR`                  | How many times the IQR is the normal range of the average |r|.                                       | `1.5`     |
-| `--edge_method`               | The method for calculating edge weights (i.e., gene correlations),`pearson` or `cs-core`.            | `cs-core` |
-| `--resample_size`             | Sample size for resampling edge weights when correcting the co-expression network.                   | `100000`  |
-| `--keep_expr`                 | No need to recalculate the gene centrality in the gene co-expression network for the next analysis.  |       |
+| Flag                          | Description                                                                                         | Default   |
+|:------------------------------|:----------------------------------------------------------------------------------------------------|:----------|
+| `--trans_gene_symbol`         | Convert the gene ID in the expression profiles to gene symbol of HGNC.                              |       |
+| `--min_expr_value`            | The minimum average gene expression level used for constructing co-expression networks.             | `0`       |
+| `--min_cell`                  | The minimum number of cells or samples required in the analysis.                                    | `100`     |
+| `--max_cell`                  | The max number of cells or samples required in the analysis.                                        | `1000`    |
+| `--min_k`                     | The minimum value of k in normalization for co-expression network.                                  | `0.5`     |
+| `--max_k`                     | The max value of k in normalization for co-expression network.                                      | `1.5`     |
+| `--fold_IQR`                  | How many times the IQR is the normal range of the average `\|r\|`                                   | `1.5`     |
+| `--edge_method`               | The method for calculating edge weights (i.e., gene correlations),`pearson` or `cs-core`.           | `cs-core` |
+| `--resample_size`             | Sample size for resampling edge weights when correcting the co-expression network.                  | `100000`  |
+| `--keep_expr`                 | No need to recalculate the gene centrality in the gene co-expression network for the next analysis. |       |
 ### Step 2: Disease-associated genes and cell types
 | Flag                   | Description                                                                                         | Default   |
 |:-----------------------|:----------------------------------------------------------------------------------------------------|:----------|
