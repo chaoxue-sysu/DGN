@@ -96,9 +96,9 @@ The functional enrichment annotation results for significantly associated module
 The file `{module_id}.module_network.html`contains the network diagram of the module, while`{module_id}.module_heatmap.png`shows the heatmap of the network edge weights.
 For example:
 
-|  ![img.png](img.png) | ![img_1.png](img_1.png) |
-|:--------------------:|:----------------------:|
-|   `{module_id}.module_network.html`    | `{module_id}.module_heatmap.png`        |
+|         ![img.png](img.png)          | ![img_1.png](img_1.png) |
+|:------------------------------------:|:----------------------:|
+|  `{module_id}.module_network.html`   | `{module_id}.module_heatmap.png`        |
 
 ## Complete List of DGN Parameters
 ### Input 1: Gene expression profile
