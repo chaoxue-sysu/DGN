@@ -43,11 +43,16 @@ class DGN:
     def __init__(self,input_dict:{}):
         self.para=input_dict
         self.para['kggsee_dir']=KGGSEE_DIR
+        coexpr_dir=self.para['coexpr_result_dir']
         out_dir=self.para['output_dir']
-        self.node_score_dir = f'{out_dir}/node_score'# save: degree, mean expression.
-        self.intermediate_dir = f'{out_dir}/intermediate'# save: k factor, resample corr coef.
         self.result_dir=f'{out_dir}/result'
-        self.saved_ref_dir = f'{out_dir}/saved_ref'
+        if coexpr_dir!='':
+            self.node_score_dir = f'{coexpr_dir}/node_score'  # save: degree, mean expression.
+            self.intermediate_dir = f'{coexpr_dir}/intermediate'  # save: k factor, resample corr coef.
+        else:
+            self.node_score_dir = f'{out_dir}/node_score'# save: degree, mean expression.
+            self.intermediate_dir = f'{out_dir}/intermediate'# save: k factor, resample corr coef.
+        # self.saved_ref_dir = f'{out_dir}/saved_ref'
         self.unified_genes_path=f'{self.intermediate_dir}/unified_genes.txt.gz'
         make_dir(self.node_score_dir,self.intermediate_dir)
         self.cell_k = {}
@@ -997,6 +1002,7 @@ def main():
 
     output=parser.add_argument_group('Output', '')
     output.add_argument('--output_dir',type=str,help='Output directory.',required=True)
+    output.add_argument('--coexpr_result_dir',default='',type=str,help='Output directory of gene co-expression network.',required=False)
 
     step_1=parser.add_argument_group('Step 1: Construction of gene co-expression network', '')
     step_1.add_argument('--trans_gene_symbol',action='store_true',help='Convert the gene ID in the expression profiles to gene symbol of HGNC. ')
